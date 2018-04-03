@@ -426,11 +426,6 @@ const char *getEnigmaVersionString()
 	return enigma2_date;
 }
 
-const char *getGStreamerVersionString()
-{
-	return "unavailable";
-}
-
 #include <malloc.h>
 
 void dump_malloc_stats(void)
