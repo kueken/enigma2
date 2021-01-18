@@ -5946,7 +5946,7 @@ void eEPGCache::channel_data::readMHWData2(const uint8_t *data)
 		}
 		if (checkMHWTimeout())
 		{
-			eDebug("[eEPGCache] mhw2 %d titles(%d with summary) found", m_titles.size(), m_program_ids.size());
+			eDebug("[EPGCache] mhw2 %lu titles(%lu with summary) found", m_titles.size(), m_program_ids.size());
 			log_add("Titles Nbr.: %d",m_titlesID.size());
 			log_add("Titles Nbr. with summary: %d",nbr_summary);
 			if (!m_program_ids.empty())
@@ -6087,7 +6087,7 @@ void eEPGCache::channel_data::readMHWData2(const uint8_t *data)
 			// Now store titles that do not have summaries.
 			for (std::map<uint32_t, mhw_title_t>::iterator itTitle(m_titles.begin()); itTitle != m_titles.end(); itTitle++)
 				storeMHWTitle( itTitle, "", data );
-			eDebug("[eEPGCache] mhw2 finished(%ld) %d summaries not found",
+			eDebug("[EPGCache] mhw2 finished(%ld) %lu summaries not found",
 				::time(0),
 				m_program_ids.size());
 			log_add("Summaries not found: %d",m_program_ids.size());
@@ -6197,7 +6197,7 @@ void eEPGCache::channel_data::readMHWData2_old(const uint8_t *data)
 		log_add("Equivalences Nbr.: %d",nb_equiv);
 
 		haveData |= MHW;
-		eDebug("[eEPGCache] mhw2 %d channels found", m_channels.size());
+		eDebug("[EPGCache] mhw2 %zu channels found", m_channels.size());
 	}
 	else if (m_MHWFilterMask2.pid == m_mhw2_channel_pid && m_MHWFilterMask2.data[0] == 0xC8 && m_MHWFilterMask2.data[1] == 1)
 	{
@@ -6307,7 +6307,7 @@ void eEPGCache::channel_data::readMHWData2_old(const uint8_t *data)
 		}
 		if (finish)
 		{
-			eDebug("[eEPGCache] mhw2 %zu titles(%d with summary) found", m_titles.size(), m_program_ids.size());
+			eDebug("[EPGCache] mhw2 %zu titles(%lu with summary) found", m_titles.size(), m_program_ids.size());
 			log_add("Titles Nbr.: %d",m_titles.size());
 			log_add("Titles Nbr. with summary: %d",m_program_ids.size());
 			if (!m_program_ids.empty())
