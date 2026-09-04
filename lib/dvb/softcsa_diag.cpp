@@ -1,6 +1,5 @@
 #include "softcsa_diag.h"
 #include <lib/base/eerror.h>
-#include <lib/base/etimer.h>
 #include <lib/base/ebase.h>
 #include <cstdio>
 #include <malloc.h>
@@ -59,8 +58,8 @@ static ePtr<eTimer> s_memDiagTimer;
 
 void softcsaMemDiagStart()
 {
-	s_memDiagTimer = eTimer::create(eApp);
-	CONNECT(s_memDiagTimer->timeout, softcsaMemDiagDump);
-	s_memDiagTimer->start(15 * 60 * 1000, false); // alle 15 Min, wiederholend
-	softcsaMemDiagDump(); // gleich einen ersten Datenpunkt beim Start
+    s_memDiagTimer = eTimer::create(eApp);
+    s_memDiagTimer->timeout.connect(sigc::ptr_fun(&softcsaMemDiagDump));
+    s_memDiagTimer->start(15 * 60 * 1000, false); // alle 15 Min, wiederholend
+    softcsaMemDiagDump(); // gleich einen ersten Datenpunkt beim Start
 }
