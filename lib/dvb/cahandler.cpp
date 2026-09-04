@@ -519,7 +519,6 @@ int eDVBCAHandler::registerService(const eServiceReferenceDVB &ref, int adapter,
 		if (s_serviceId_cache.size() > 500)
 		{
 			s_serviceId_cache.clear();
-			s_serviceId_cache[ref] = serviceId;
 		}
 		auto cache_it = s_serviceId_cache.find(ref);
 		if (cache_it != s_serviceId_cache.end())
