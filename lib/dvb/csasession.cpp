@@ -242,8 +242,10 @@ void eDVBCSASession::ecmDataReceived(const uint8_t *data)
 
 		// Update unified cache (preserve serviceId if already known)
 		uint64_t svc_key = makeServiceKey(m_service_ref);
+		{
 		if (s_csa_cache.size() > 500)
 		s_csa_cache.clear();
+		}
 		auto& cached = s_csa_cache[svc_key];
 		cached.is_csa_alt = is_csa_alt;
 		cached.ecm_mode = new_ecm_mode;
@@ -419,8 +421,10 @@ void eDVBCSASession::onCwReceived(eServiceReferenceDVB ref, int parity, const ch
 			caid, parity, m_engine->hasEvenKey(), m_engine->hasOddKey(), cw_bytes[0]);
 
 		// Cache serviceId for future sessions (enables pre-registration on PiP swap)
+		{
 		if (s_csa_cache.size() > 500)
 		s_csa_cache.clear();
+		}
 		auto& cached = s_csa_cache[svc_key];
 		cached.serviceId = serviceId;
 		cached.serviceId_valid = true;
