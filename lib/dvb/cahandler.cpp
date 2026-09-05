@@ -439,6 +439,18 @@ eDVBCAHandler::~eDVBCAHandler()
 	}
 }
 
+// --- SoftCSA memory diagnostics: cache size getters, called from softcsa_diag.cpp ---
+size_t getPmtCacheSize()
+{
+	eDVBCAHandler *inst = eDVBCAHandler::getInstance();
+	return inst ? inst->getPmtCacheSize() : 0;
+}
+
+size_t getServiceIdCacheSize()
+{
+	return s_serviceId_cache.size();
+}
+
 void eDVBCAHandler::newConnection(int socket)
 {
 	/*

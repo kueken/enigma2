@@ -23,6 +23,12 @@ struct ServiceCsaInfo {
 };
 static std::map<uint64_t, ServiceCsaInfo> s_csa_cache;
 
+// --- SoftCSA memory diagnostics: cache size getter, called from softcsa_diag.cpp ---
+size_t getCsaCacheSize()
+{
+	return s_csa_cache.size();
+}
+
 // Helper: Check if CAID is VideoGuard
 static bool caid_is_videoguard(uint16_t caid)
 {
