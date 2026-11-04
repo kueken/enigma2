@@ -348,8 +348,18 @@ protected:
 
 	// Audio cache helper
 	void updateAudioCache(int apid, int apidtype);
+
+	// SoftCSA mode helpers.
+	//
+	// config.misc.softcam_softcsa is a tri-state global setting:
+	//   0 = Off, 1 = Whitelist, 2 = Auto
+	// config.misc.softcam_use_softcsa is set by Python (InfoBarWhitelists::
+	// softCSAChecker) to indicate whether the CURRENT service is in the
+	// SoftCSA whitelist file.
 	bool csa_is_auto() { return eConfigManager::getConfigIntValue("config.misc.softcam_softcsa", 0) == 2; }
-	bool csa_from_whitelist() { return eConfigManager::getConfigIntValue("config.misc.softcam_softcsa", 0) == 1; };
+	bool csa_whitelist_mode_active() { return eConfigManager::getConfigIntValue("config.misc.softcam_softcsa", 0) == 1; }
+	bool csa_from_whitelist() { return eConfigManager::getConfigBoolValue("config.misc.softcam_use_softcsa", false); }
+	bool csa_enabled_for_current_service() { return csa_is_auto() || (csa_whitelist_mode_active() && csa_from_whitelist()); }
 };
 
 class eStaticServiceDVBBouquetInformation: public iStaticServiceInformation

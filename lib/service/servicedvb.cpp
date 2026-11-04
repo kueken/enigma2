@@ -1240,7 +1240,7 @@ void eDVBServicePlay::serviceEvent(int event)
 		if (m_timeshift_enabled)
 			updateTimeshiftPids();
 
-		if ((csa_is_auto() || csa_from_whitelist()) && m_csa_session && !m_csa_session->isEcmAnalyzed())
+		if (csa_enabled_for_current_service() && m_csa_session && !m_csa_session->isEcmAnalyzed())
 		{
 			eDVBServicePMTHandler::program program;
 			if (m_service_handler.getProgramInfo(program) == 0 && !program.caids.empty())
@@ -1485,7 +1485,7 @@ RESULT eDVBServicePlay::start()
 		}
 		m_event(this, evStart);
 	}
-	else if ((csa_is_auto() || csa_from_whitelist()) && !m_is_stream && scrambled)
+	else if (csa_enabled_for_current_service() && !m_is_stream && scrambled)
 	{
 		// Setup speculative software descrambling for encrypted Live-TV
 		setupSpeculativeDescrambling();
@@ -1559,8 +1559,8 @@ RESULT eDVBServicePlay::connectEvent(const sigc::slot<void(iPlayableService*,int
 RESULT eDVBServicePlay::pause(ePtr<iPauseableService> &ptr)
 {
 		/* note: we check for timeshift to be enabled,
-			not neccessary active. if you pause when timeshift
-			is not active, you should activate it when unpausing */
+		not neccessary active. if you pause when timeshift
+		is not active, you should activate it when unpausing */
 	if ((!m_is_pvr) && (!m_timeshift_enabled) && (m_reference.path.empty() || m_reference.isStreamRelay))
 	{
 		ptr = nullptr;
@@ -4187,18 +4187,14 @@ void eDVBServicePlay::cleanupSoftwareDescrambling()
 		&& prog.isCrypted()
 		&& m_csa_session
 		&& m_csa_session->isActive()
-		&& (csa_is_auto() || csa_from_whitelist())
+		&& csa_enabled_for_current_service()
 		&& eConfigManager::getConfigIntValue("config.softcsa.decoderRelease", 0) == 2)
 		resetHwDescramblerSlot();
 
-	// Release HW decoder PIDs when SoftCSA was active for this service.
-	// Fall back to unconditional cleanup if the session was already torn down
-	// but the decoder reference is still held, to avoid leaking the decoder
-	// slot (regression from the previous commit).
-	bool softcsa_was_active =
-		(m_csa_session && m_csa_session->isActive())
-		|| (csa_is_auto() || csa_from_whitelist());
-	if (m_decoder && softcsa_was_active)
+	// Leave a decoder which was never handed over to SoftCSA to its normal
+	// service lifecycle. An active session can still own a restored HW decoder
+	// here when the SoftDecoder takeover failed.
+	if (m_decoder && m_csa_session && m_csa_session->isActive())
 	{
 		eDebug("[eDVBServicePlay] Cleaning up HW decoder for clean handover");
 
