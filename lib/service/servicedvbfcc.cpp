@@ -569,8 +569,8 @@ void eDVBServiceFCCPlay::setupSpeculativeDescrambling()
 	// Override base class to use FCC-specific callback (onFCCSessionActivated)
 	// instead of base class callback (onSessionActivated)
 
-	// Only for Live-TV, not for PVR, streams
-	if (m_is_pvr || m_is_stream)
+	// Only for Live-TV, not for PVR, streams, StreamRelay
+	if (m_is_pvr || m_is_stream || m_reference.isStreamRelay)
 		return;
 
 	eDebug("[eDVBServiceFCCPlay] Encrypted channel, creating CSA session for FCC");

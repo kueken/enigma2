@@ -4041,7 +4041,7 @@ void eDVBServicePlay::setQpipMode(bool value, bool audio)
 void eDVBServicePlay::setupSpeculativeDescrambling()
 {
 	// Only for Live-TV, not for PVR, streams, StreamRelay
-	if (m_is_pvr || m_is_stream)
+	if (m_is_pvr || m_is_stream || m_reference.isStreamRelay)
 		return;
 
 	// libdvbcsa missing -> software descrambling not possible, skip all setup

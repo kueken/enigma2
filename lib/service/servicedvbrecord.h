@@ -79,7 +79,11 @@ private:
 	ePtr<eDVBCSASession> m_csa_session;
 	bool m_use_software_descramble;
 	bool csa_is_auto() { return eConfigManager::getConfigIntValue("config.misc.softcam_softcsa", 0) == 2; }
-	bool csa_from_whitelist() { return eConfigManager::getConfigBoolValue("config.misc.softcam_use_softcsa", false) == true; }
+	bool csa_from_whitelist() { return eConfigManager::getConfigIntValue("config.misc.softcam_softcsa", 0) == 1 && eConfigManager::getConfigBoolValue("config.misc.softcam_use_softcsa", false); }
+	// Streams (incl. StreamRelay/icam) are already descrambled by their source:
+	// never attach SoftCSA to them, otherwise it collides with the relay.
+	bool csa_source_allowed() const { return !m_is_stream_client && !m_ref.isStreamRelay; }
+	bool csa_wanted() { return csa_source_allowed() && (csa_is_auto() || csa_from_whitelist()); }
 
 	int setupSoftwareDescrambler(eDVBServicePMTHandler::program& program);
 
